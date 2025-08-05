@@ -21,6 +21,14 @@ import xarray as xr
 from matplotlib.ticker import FuncFormatter
 from scipy import odr, stats
 
+def get_dates(sdate, edate, hint):
+    from datetime import datetime, timedelta
+    date1 = pd.to_datetime(sdate)
+    date2 = pd.to_datetime(edate)
+    delta = timedelta(hours=hint)
+    dates = pd.date_range(start=date1, end=date2, freq=delta)
+    return dates
+
 # AERONET-OC Download Constants
 # Valid AERONET-OC site list
 DF_AERONET_SITES = pd.read_csv(
