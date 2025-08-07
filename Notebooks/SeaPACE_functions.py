@@ -855,8 +855,24 @@ def match_data(
     time_window = pd.Timedelta(minutes=max_time_diff)
     df_match_list = []
 
+    #TODO: add dependency on AERONET or SeaBass file
+    # 1) prepare your field table
+    df_field_filtered = df_field.copy()
+
+    # pull real datetimes out of the index
+    df_field_filtered["field_datetime"] = df_field_filtered['datetime']
+    # ensure tz-naive
+    df_field_filtered["field_datetime"] = (
+        pd.to_datetime(df_field_filtered["field_datetime"])
+          .dt.tz_localize('UTC')
+    )
+
+    # rename lat/lon
+    df_field_filtered["field_latitude"]  = df_field_filtered["lat"]
+    df_field_filtered["field_longitude"] = df_field_filtered["lon"]
+    
     # Filter Field data based on Solar Zenith
-    df_field_filtered = df_field[df_field["field_solar_zenith"] <= senz_max]
+    # df_field_filtered = df_field[df_field["field_solar_zenith"] <= senz_max]
 
     # Filter satellite data based on cv threshold
     df_sat_filtered = df_sat[df_sat["sat_cv"] <= cv_max]
